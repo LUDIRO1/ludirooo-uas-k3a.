@@ -1,0 +1,649 @@
+{
+  "entities": {
+    "WorkspaceConfig": {
+      "title": "WorkspaceConfig",
+      "description": "Server-side workspace configuration holding admin enrollment passcode.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "adminPasscode": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 64
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "adminPasscode", "updatedAt"]
+    },
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Registered administrator account authorized to manage Backoffice HRM data.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 120
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "passcode": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "email", "name", "createdAt"]
+    },
+    "Position": {
+      "title": "Position",
+      "description": "Job position and department configuration with default daily wage rate.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "workspaceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "title": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "department": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "dailyRate": {
+          "type": "number"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "workspaceId", "title", "department", "dailyRate", "description", "createdAt", "updatedAt"]
+    },
+    "Employee": {
+      "title": "Employee",
+      "description": "Employee public workspace directory record (PII isolated in private subcollection).",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "workspaceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "nip": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 30
+        },
+        "ownerUid": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "fullName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "positionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "positionTitle": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "department": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "dailyRate": {
+          "type": "number"
+        },
+        "joinDate": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "maxLength": 10
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Aktif", "Nonaktif"],
+          "maxLength": 20
+        },
+        "avatarUrl": {
+          "type": "string",
+          "maxLength": 150000
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "workspaceId",
+        "nip",
+        "ownerUid",
+        "fullName",
+        "positionId",
+        "positionTitle",
+        "department",
+        "dailyRate",
+        "joinDate",
+        "status",
+        "avatarUrl",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "EmployeePrivateContact": {
+      "title": "EmployeePrivateContact",
+      "description": "Isolated PII contact info (email, phone) accessible only to owner or Admin.",
+      "type": "object",
+      "properties": {
+        "employeeId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerUid": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 120
+        },
+        "phone": {
+          "type": "string",
+          "maxLength": 30
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["employeeId", "ownerUid", "email", "phone", "updatedAt"]
+    },
+    "WorkSchedule": {
+      "title": "WorkSchedule",
+      "description": "Company working days, shift clock-in/clock-out hours, late tolerance, and holiday calendar.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "workspaceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "workDays": {
+          "type": "array"
+        },
+        "clockInTime": {
+          "type": "string",
+          "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+          "maxLength": 5
+        },
+        "clockOutTime": {
+          "type": "string",
+          "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+          "maxLength": 5
+        },
+        "lateToleranceMinutes": {
+          "type": "number"
+        },
+        "holidays": {
+          "type": "array"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "workspaceId",
+        "name",
+        "workDays",
+        "clockInTime",
+        "clockOutTime",
+        "lateToleranceMinutes",
+        "holidays",
+        "isActive",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Attendance": {
+      "title": "Attendance",
+      "description": "Daily employee clock-in and clock-out record with selfie verification and daily wage snapshot.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "workspaceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "employeeId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerUid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "employeeName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "employeeNip": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 30
+        },
+        "positionTitle": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "maxLength": 10
+        },
+        "clockInTime": {
+          "type": "string",
+          "maxLength": 10
+        },
+        "clockOutTime": {
+          "type": "string",
+          "maxLength": 10
+        },
+        "clockInPhoto": {
+          "type": "string",
+          "maxLength": 250000
+        },
+        "clockOutPhoto": {
+          "type": "string",
+          "maxLength": 250000
+        },
+        "clockInLocation": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "clockOutLocation": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Hadir", "Terlambat", "Izin", "Alpa"],
+          "maxLength": 20
+        },
+        "dailyRateSnapshot": {
+          "type": "number"
+        },
+        "earnedAmount": {
+          "type": "number"
+        },
+        "workDurationMinutes": {
+          "type": "number"
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 250
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "workspaceId",
+        "employeeId",
+        "ownerUid",
+        "employeeName",
+        "employeeNip",
+        "positionTitle",
+        "date",
+        "clockInTime",
+        "clockOutTime",
+        "clockInPhoto",
+        "clockOutPhoto",
+        "clockInLocation",
+        "clockOutLocation",
+        "status",
+        "dailyRateSnapshot",
+        "earnedAmount",
+        "workDurationMinutes",
+        "notes",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "LeaveRequest": {
+      "title": "LeaveRequest",
+      "description": "Mobile employee leave/sick/permission request synced to Admin Backoffice.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "workspaceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "employeeId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerUid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "employeeName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "leaveType": {
+          "type": "string",
+          "enum": ["Izin", "Sakit", "Cuti"],
+          "maxLength": 20
+        },
+        "startDate": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "maxLength": 10
+        },
+        "endDate": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "maxLength": 10
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 250
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Menunggu", "Disetujui", "Ditolak"],
+          "maxLength": 20
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "workspaceId",
+        "employeeId",
+        "ownerUid",
+        "employeeName",
+        "leaveType",
+        "startDate",
+        "endDate",
+        "reason",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Payroll": {
+      "title": "Payroll",
+      "description": "Daily-wage payroll settlement record calculated from verified attendance days.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "workspaceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "employeeId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "ownerUid": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "employeeName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "employeeNip": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 30
+        },
+        "positionTitle": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "periodLabel": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 50
+        },
+        "periodStart": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "maxLength": 10
+        },
+        "periodEnd": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "maxLength": 10
+        },
+        "dailyRate": {
+          "type": "number"
+        },
+        "daysPresent": {
+          "type": "number"
+        },
+        "daysLate": {
+          "type": "number"
+        },
+        "basePay": {
+          "type": "number"
+        },
+        "bonus": {
+          "type": "number"
+        },
+        "deduction": {
+          "type": "number"
+        },
+        "totalPay": {
+          "type": "number"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Draft", "Disetujui", "Dibayarkan"],
+          "maxLength": 20
+        },
+        "paidDate": {
+          "type": "string",
+          "maxLength": 10
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "workspaceId",
+        "employeeId",
+        "ownerUid",
+        "employeeName",
+        "employeeNip",
+        "positionTitle",
+        "periodLabel",
+        "periodStart",
+        "periodEnd",
+        "dailyRate",
+        "daysPresent",
+        "daysLate",
+        "basePay",
+        "bonus",
+        "deduction",
+        "totalPay",
+        "status",
+        "paidDate",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/workspaceConfig/{configId}": {
+      "schema": { "$ref": "#/entities/WorkspaceConfig" },
+      "description": "Server-side workspace configuration for admin passcode verification."
+    },
+    "/admins/{userId}": {
+      "schema": { "$ref": "#/entities/AdminUser" },
+      "description": "Registry of administrator UIDs with Backoffice HRM access."
+    },
+    "/positions/{positionId}": {
+      "schema": { "$ref": "#/entities/Position" },
+      "description": "Job positions and standard daily wage rates."
+    },
+    "/employees/{employeeId}": {
+      "schema": { "$ref": "#/entities/Employee" },
+      "description": "Employee workspace directory (public non-PII fields)."
+    },
+    "/employees/{employeeId}/private/{docId}": {
+      "schema": { "$ref": "#/entities/EmployeePrivateContact" },
+      "description": "Isolated PII contact details (email, phone) accessible only by owner or Admin."
+    },
+    "/workSchedules/{scheduleId}": {
+      "schema": { "$ref": "#/entities/WorkSchedule" },
+      "description": "Company working days, shift hours, tolerance, and holidays."
+    },
+    "/attendances/{attendanceId}": {
+      "schema": { "$ref": "#/entities/Attendance" },
+      "description": "Daily attendance clock-in and clock-out logs with selfie photos."
+    },
+    "/leaveRequests/{requestId}": {
+      "schema": { "$ref": "#/entities/LeaveRequest" },
+      "description": "Employee leave, sick, and permission requests."
+    },
+    "/payrolls/{payrollId}": {
+      "schema": { "$ref": "#/entities/Payroll" },
+      "description": "Daily-rate payroll calculation and payout records."
+    }
+  }
+}

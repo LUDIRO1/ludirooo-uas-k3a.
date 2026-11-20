@@ -1,0 +1,6 @@
+{
+  "name": "NusaHR — HRM Backoffice & Mobile PWA",
+  "description": "Sistem Manajemen SDM terpadu dengan Panel Backoffice Manajemen (Karyawan, Jabatan, Jam Kerja, Kehadiran, Payroll Harian) dan Mobile PWA Karyawan bergaya fintech dengan presensi selfie real-time.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

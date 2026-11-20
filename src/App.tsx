@@ -253,11 +253,39 @@ function MainApp() {
     try {
       await signInWithPopup(auth, googleProvider);
     } catch (err) {
-      const msg =
+      const code =
+        typeof err === 'object' && err !== null && 'code' in err
+          ? String((err as { code: unknown }).code)
+          : '';
+      const rawMsg =
         err instanceof Error
           ? err.message
           : 'Gagal masuk dengan Google. Silakan coba lagi.';
-      setLoginError(msg);
+
+      if (
+        code === 'auth/unauthorized-domain' ||
+        rawMsg.includes('auth/unauthorized-domain')
+      ) {
+        const currentHost =
+          typeof window !== 'undefined' ? window.location.hostname : '';
+        setLoginError(
+          `auth/unauthorized-domain: Domain "${currentHost}" belum terdaftar di Authorized Domains Firebase Authentication. Tambahkan "${currentHost}" di Firebase Console (Authentication → Settings → Authorized domains) lalu muat ulang halaman.`
+        );
+      } else if (
+        code === 'auth/popup-blocked' ||
+        rawMsg.includes('auth/popup-blocked')
+      ) {
+        setLoginError(
+          'Popup login Google diblokir oleh browser. Izinkan popup untuk situs ini lalu klik tombol Masuk lagi.'
+        );
+      } else if (
+        code === 'auth/popup-closed-by-user' ||
+        rawMsg.includes('auth/popup-closed-by-user')
+      ) {
+        setLoginError('Jendela login Google ditutup sebelum selesai. Silakan coba kembali.');
+      } else {
+        setLoginError(rawMsg);
+      }
       pendingLoginIntent.current = null;
     } finally {
       setLoginLoading(false);

@@ -16,6 +16,7 @@ import {
   Wallet,
   Wifi,
 } from 'lucide-react';
+import firebaseConfig from '../../../firebase-applet-config.json';
 import { formatDateDDMMMYYYY, getTodayISO } from '../../utils/formatters';
 import { LiveClock } from '../LiveClock';
 import { PWAInstallButton } from '../PWAInstallButton';
@@ -187,8 +188,18 @@ export const LoginPortalView: React.FC<Props> = ({
         </section>
 
         {errorMessage && (
-          <div className="rounded-2xl bg-rose-50 border border-rose-200 px-4 py-3 text-xs font-medium text-rose-700">
-            {errorMessage}
+          <div className="rounded-2xl bg-rose-50 border border-rose-200 px-4 py-3 text-xs font-medium text-rose-700 space-y-2">
+            <p>{errorMessage}</p>
+            {errorMessage.includes('auth/unauthorized-domain') && (
+              <a
+                href={`https://console.firebase.google.com/project/${firebaseConfig.projectId}/authentication/settings`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 font-semibold text-rose-900 underline hover:text-rose-950"
+              >
+                <span>Buka Pengaturan Authorized Domains di Firebase Console →</span>
+              </a>
+            )}
           </div>
         )}
 
